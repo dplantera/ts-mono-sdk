@@ -9,10 +9,11 @@
   ],
   "repository": "https://github.com/dplantera/openapi.git",
   "scripts": {
-    "test": "echo \"no test specified\" && exit 0",
-    "build": "npm run build --ws --if-present",
-    "clean": "rimraf **/package-lock.json; rimraf **/node_modules",
-    "clean:refresh": "npm run clean && npm i && npm run ts-refs:fix",
+    "test": "echo '[script-not-implemented]: test'",
+    "build": "yarn build:ws && yarn ts-refs:fix",
+    "build:ws": "yarn workspaces foreach -pt --no-private run build",
+    "clean": "rimraf **/package-lock.json && rimraf **/node_modules",
+    "clean:refresh": "yarn clean && yarn i && yarn ts-refs:fix",
     "ts-refs:fix": "utils-typescript-references",
     "lint:fix": "eslint . --ext .ts,.json"
   },
