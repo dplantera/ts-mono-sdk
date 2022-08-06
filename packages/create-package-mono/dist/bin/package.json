@@ -1,0 +1,21 @@
+{
+  "name": "@dsp-openapi/create-mono-package",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "start": "npm run build && node dist/index.js",
+    "start:dev": "nodemon",
+    "build": "npm run compile:pre && npm run compile && npm run compile:post",
+    "build:clean": "npm run clean && npm run build",
+    "compile:pre": ";echo script not implemented: compile:pre",
+    "compile": "tsc",
+    "compile:post": ";echo script not implemented: compile:post",
+    "clean": "rimraf ./dist || echo Skipping 'clean' step due to error"
+  },
+  "keywords": [],
+  "author": "dplantera",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}

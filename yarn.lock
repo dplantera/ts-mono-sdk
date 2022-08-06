@@ -411,8 +411,11 @@ __metadata:
   resolution: "@dsp/create-package-mono@workspace:packages/create-package-mono"
   dependencies:
     commander: ^9.4.0
+    copyfiles: ^2.4.1
+  peerDependencies:
+    ts-node: ^10.9.1
   bin:
-    cpm: src/index.js
+    cpm: src/index.ts
   languageName: unknown
   linkType: soft
 

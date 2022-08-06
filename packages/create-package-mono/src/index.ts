@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
 import { Command } from 'commander';
 import { createMonoPackage } from './create-mono-package';
