@@ -9,7 +9,6 @@
   ],
   "scripts": {
     "test": "echo \"no test specified\" && exit 0",
-    "dev": "npm run start:dev --workspace=@dsp-openapi/openapi-zod-ts-generator",
     "build": "npm run build --ws --if-present",
     "clean": "rimraf **/package-lock.json; rimraf **/node_modules",
     "clean:refresh": "npm run clean && npm i && npm run ts-refs:fix",

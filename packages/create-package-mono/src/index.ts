@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { createMonoPackage } from './createMonoPackage';
+import { createMonoPackage } from './create-mono-package';
 
 export type CliOptions = {
   verbose: boolean;

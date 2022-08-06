@@ -22,5 +22,6 @@
   "devDependencies": {
   },
   "dependencies": {
+    "commander": "^9.4.0"
   }
 }
