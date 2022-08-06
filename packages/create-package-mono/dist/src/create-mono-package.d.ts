@@ -1,7 +1,2 @@
-declare type Args = {
-    packageName: string;
-    verbose: boolean;
-    packageRoot: string;
-};
-export declare function createMonoPackage(args: Args): void;
-export {};
+import { CliOptions } from './index';
+export declare function createMonoPackage(options: CliOptions): void;

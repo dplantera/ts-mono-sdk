@@ -26,45 +26,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createMonoPackage = void 0;
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-function createMonoPackage(args) {
+const mono_repo_1 = require("./mono-repo");
+const package_json_1 = require("./package-json");
+const filesystem_1 = require("./filesystem");
+function createMonoPackage(options) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { packageName, verbose, packageRoot } = args;
+    const { packageName, verbose, packageRoot } = options;
     const packagesRoot = path.resolve(process.cwd(), packageRoot);
     const packagePath = path.resolve(packagesRoot, packageName);
-    console.log({ packagesRoot, packagePath });
-    console.log({ packagesRoot, packagePath });
+    console.log('creating mono package', { packagesRoot, packagePath });
     copyBinFilesTo(packagePath);
-    mergePackageJson(packagePath, packageName);
+    createOrUpdatePackageJson(packagePath, packagesRoot, options);
     createFolderStructure(packagePath);
 }
 exports.createMonoPackage = createMonoPackage;
 function copyBinFilesTo(target) {
-    if (!fs.existsSync(target)) {
-        console.log(`Creating ${target}`);
-        fs.mkdirSync(target);
-    }
-    const bin = path.resolve(__dirname, '../bin');
-    console.log(`Copy files \n  - from: ${bin} \n  - to: ${target}`);
-    fs.cpSync(bin, target, { recursive: true });
+    filesystem_1.Filesystem.copy.directory(target, '../bin');
 }
-function mergePackageJson(packagePath, name) {
+function createOrUpdatePackageJson(packagePath, packagesRoot, options) {
+    const repoName = mono_repo_1.MonoRepo.getOrFindRepoName(options.repoName, packagesRoot);
+    const packageName = `@${repoName}/${options.packageName}`;
     const jsonBin = require(path.resolve(__dirname, '../bin', 'package.json'));
     const jsonTargetPath = path.resolve(packagePath, 'package.json');
     const jsonTarget = require(jsonTargetPath);
-    const merged = Object.assign(Object.assign({}, jsonTarget), { name: jsonTarget.name !== jsonBin.name ? jsonTarget.name : jsonTarget.name.replace(/(?<=\/).*/u, name), scripts: Object.keys(jsonBin.scripts).reduce((targetJson, key) => {
-            if (!targetJson[key]) {
-                console.log(`Adding new script: ${key}`);
-                targetJson[key] = jsonBin.scripts[key];
-                return targetJson;
-            }
-            if (targetJson[key].startsWith(';')) {
-                console.log(`Overwrite scripts key: ${key}`);
-                targetJson[key] = jsonBin.scripts[key];
-                return targetJson;
-            }
-            return targetJson;
-        }, Object.assign({}, jsonTarget.scripts)) });
-    fs.writeFileSync(jsonTargetPath, JSON.stringify(merged, undefined, 2));
+    console.log('merging package json...');
+    package_json_1.PackageJson.write(jsonTargetPath, Object.assign(Object.assign({}, jsonTarget), { 
+        // initially the bin will be copied and the overwritten. only initially the names are identically
+        name: jsonBin.name === jsonTarget.name ? packageName : jsonTarget.name, scripts: package_json_1.PackageJson.mergeScripts(jsonBin, jsonTarget) }));
 }
 function createFolderStructure(packagePath) {
     const files = [path.resolve(packagePath, 'src', 'index.ts')];
