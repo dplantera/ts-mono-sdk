@@ -16,8 +16,6 @@
   "keywords": [],
   "author": "dplantera",
   "license": "MIT",
-  "devDependencies": {
-  },
-  "dependencies": {
-  }
+  "devDependencies": {},
+  "dependencies": {}
 }

@@ -8,9 +8,11 @@ type Args = {
 };
 
 export function createMonoPackage(args: Args): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { packageName, verbose, packageRoot } = args;
   const packagesRoot = path.resolve(process.cwd(), packageRoot);
   const packagePath = path.resolve(packagesRoot, packageName);
+  console.log({ packagesRoot, packagePath });
   console.log({ packagesRoot, packagePath });
   copyBinFilesTo(packagePath);
   mergePackageJson(packagePath, packageName);

@@ -19,8 +19,6 @@
   "keywords": [],
   "author": "dplantera",
   "license": "ISC",
-  "devDependencies": {
-  },
   "dependencies": {
     "commander": "^9.4.0"
   }
