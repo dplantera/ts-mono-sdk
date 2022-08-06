@@ -1,6 +1,6 @@
 {
   "name": "@dsp/create-package-mono",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
   "main": "src/index.ts",
   "scripts": {
@@ -9,7 +9,7 @@
     "build:clean": "yarn clean && yarn build",
     "compile:pre": "echo '[script-not-implemented]: compile:pre'",
     "compile": "tsc",
-    "compile:post": "copyfiles bin/* dist",
+    "compile:post": "copy-files.ts",
     "clean": "rimraf ./dist || echo Skipping 'clean' step due to error",
     "start": "yarn build && node build/index.js"
   },
@@ -20,8 +20,7 @@
   "author": "dplantera",
   "license": "ISC",
   "dependencies": {
-    "commander": "^9.4.0",
-    "copyfiles": "^2.4.1"
+    "commander": "^9.4.0"
   },
   "peerDependencies": {
     "ts-node": "^10.9.1"
