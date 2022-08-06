@@ -1,8 +1,8 @@
 {
   "name": "@dsp/create-package-mono",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
   "scripts": {
     "start:dev": "nodemon",
     "build": "yarn compile:pre && yarn compile && yarn compile:post",
@@ -14,7 +14,7 @@
     "start": "yarn build && node build/index.js"
   },
   "bin": {
-    "cpm": "src/index.ts"
+    "cpm": "dist/src/index.js"
   },
   "keywords": [],
   "author": "dplantera",
