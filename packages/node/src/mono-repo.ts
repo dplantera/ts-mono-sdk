@@ -2,18 +2,26 @@ import * as path from 'path';
 import { PackageJson } from './package-json';
 import { Filesystem } from './filesystem';
 
+/** *
+ * interface to handle mono-repo business logic
+ */
 export const MonoRepo = {
   getOrFindRepoName,
 };
 
-function getOrFindRepoName(repoName: string | undefined, packagesRoot: string) {
+/** *
+ * finds the repo's package.json by going up {@link maxRecursions} from the given package-root and testing for existence
+ * @param repoName
+ * @param packagesRoot
+ * @param maxRecursions
+ */
+function getOrFindRepoName(repoName: string | undefined, packagesRoot: string, { maxRecursions } = { maxRecursions: 3 }) {
   if (repoName !== undefined) {
     return repoName;
   }
   console.log('searching for repo package.json:');
-  let maxRecursiveSteps = 3;
   const parent = path.dirname(packagesRoot);
-  while (maxRecursiveSteps-- > 0) {
+  while (maxRecursions-- > 0) {
     console.log(`- searching in: ${parent}`);
     const packageJsonPath = path.resolve(parent, 'package.json');
     const rPackageName = Filesystem.withFile(packageJsonPath)

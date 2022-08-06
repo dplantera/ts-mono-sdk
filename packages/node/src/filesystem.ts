@@ -8,6 +8,9 @@ const Copy = {
   directory: copyDirectoryTo,
 };
 
+/** *
+ * interface to handle file-system related business logic
+ */
 export const Filesystem = {
   withFile,
   withDir,
@@ -21,7 +24,9 @@ function copyDirectoryTo(_destination: string, ...sources: Array<string>) {
     sources.forEach((_source) => {
       const source = path.resolve(process.cwd(), _source);
       console.log(`- copy from: ${source}`);
-      withTry(() => fs.cpSync(source, destination, { recursive: true })).mapErr((err) => console.error(`- copy failed for ${source}: ${err}`));
+      withTry(() => fs.cpSync(source, destination, { recursive: true })).mapErr((err) =>
+        console.error(`- copy failed for ${source}: ${err}`)
+      );
     });
     return destination;
   });
