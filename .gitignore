@@ -1,0 +1,14 @@
+/out/
+/.idea/
+/ts-example/service/node_modules/
+packages/**/build
+packages/**/dist
+packages/**/*.tsbuildinfo
+**/package-lock.json
+node_modules
+.jest
+*.js
+*.js.map
+*.iml
+!jest.config.base.js
+*.log
