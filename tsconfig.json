@@ -9,9 +9,6 @@
       "path": "packages/create-package-mono"
     },
     {
-      "path": "packages/create-repo-mono"
-    },
-    {
       "path": "packages/node"
     }
   ]

@@ -1,28 +1,21 @@
 {
   "name": "@dsp/create-package-mono",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "",
-  "main": "dist/src/index.js",
+  "main": "./dist/src/index.js",
   "scripts": {
+    "start": "yarn build && node dist/index.js",
     "start:dev": "nodemon",
     "build": "yarn compile:pre && yarn compile && yarn compile:post",
     "build:clean": "yarn clean && yarn build",
     "compile:pre": "echo '[script-not-implemented]: compile:pre'",
     "compile": "tsc",
-    "compile:post": "copy-files.ts",
-    "clean": "rimraf ./dist || echo Skipping 'clean' step due to error",
-    "start": "yarn build && node build/index.js"
-  },
-  "bin": {
-    "cpm": "dist/src/index.js"
+    "compile:post": "echo '[script-not-implemented]: compile:post'",
+    "clean": "rimraf ./dist || echo Skipping 'clean' step due to error"
   },
   "keywords": [],
   "author": "dplantera",
-  "license": "ISC",
-  "dependencies": {
-    "commander": "^9.4.0"
-  },
-  "peerDependencies": {
-    "ts-node": "^10.9.1"
-  }
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
 }

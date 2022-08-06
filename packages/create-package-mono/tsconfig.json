@@ -5,5 +5,13 @@
     "sourceMap": false,
     "declarationMap": false
   },
-  "include": ["src/*.ts", "src/**/*.ts"]
+  "include": [
+    "src/*.ts",
+    "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../node"
+    }
+  ]
 }

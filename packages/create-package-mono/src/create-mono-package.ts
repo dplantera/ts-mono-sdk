@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { CliOptions } from './index';
-import { MonoRepo } from './mono-repo';
-import { PackageJson } from './package-json';
-import { Filesystem } from './filesystem';
+import { Filesystem, MonoRepo, PackageJson } from '@ts-mono-sdk/node';
+import * as process from 'process';
+import { Result } from 'neverthrow';
+import * as assert from 'assert';
 
 export function createMonoPackage(options: CliOptions): void {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,24 +19,32 @@ export function createMonoPackage(options: CliOptions): void {
 }
 
 function copyBinFilesTo(target: string) {
-  Filesystem.copy.directory(target, '../bin');
+  assert.ok(__dirname.includes('create-package-mono'), `${__dirname} has to be part of create-packa-mono because we need the bin files`);
+  Filesystem.copy.directory(target, path.resolve(__dirname, '../bin'));
 }
 
 function createOrUpdatePackageJson(packagePath: string, packagesRoot: string, options: CliOptions) {
   const repoName = MonoRepo.getOrFindRepoName(options.repoName, packagesRoot);
   const packageName = `@${repoName}/${options.packageName}`;
 
-  const jsonBin = require(path.resolve(__dirname, '../bin', 'package.json'));
+  const jsonBinPath = path.resolve(__dirname, '../bin', 'package.json');
   const jsonTargetPath = path.resolve(packagePath, 'package.json');
-  const jsonTarget = require(jsonTargetPath);
 
-  console.log('merging package json...');
-  PackageJson.write(jsonTargetPath, {
-    ...jsonTarget,
-    // initially the bin will be copied and the overwritten. only initially the names are identically
-    name: jsonBin.name === jsonTarget.name ? packageName : jsonTarget.name,
-    scripts: PackageJson.mergeScripts(jsonBin, jsonTarget),
+  const res = Result.combine([Filesystem.withFile(jsonBinPath), Filesystem.withFile(jsonTargetPath)]).map(([pJsonBinFile, pJsonTargetFile]) => {
+    console.log('merging package json...');
+    const jsonBin = PackageJson.parse(pJsonBinFile);
+    const jsonTarget = PackageJson.parse(pJsonTargetFile);
+    return {
+      ...jsonTarget,
+      // initially the bin will be copied and the overwritten. only initially the names are identically
+      name: jsonBin.name === jsonTarget.name ? packageName : jsonTarget.name,
+      scripts: PackageJson.mergeScripts(jsonBin, jsonTarget),
+    };
   });
+  if (res.isOk()) {
+    return PackageJson.write(jsonTargetPath, res.value);
+  }
+  console.error(res.error);
 }
 
 function createFolderStructure(packagePath: string) {
@@ -43,4 +52,9 @@ function createFolderStructure(packagePath: string) {
   files.forEach(
     (file) => !fs.existsSync(path.dirname(file)) && fs.mkdirSync(path.dirname(file), { recursive: true }) && fs.writeFileSync(file, '', { encoding: 'utf-8' })
   );
+}
+
+function panic(msg: string) {
+  console.error(msg);
+  process.exit(1);
 }

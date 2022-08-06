@@ -12,8 +12,8 @@
     "test": "echo '[script-not-implemented]: test'",
     "build": "yarn build:ws && yarn ts-refs:fix",
     "build:ws": "yarn workspaces foreach -pt --no-private run build",
-    "clean": "rimraf **/package-lock.json && rimraf **/node_modules",
-    "clean:refresh": "yarn clean && yarn i && yarn ts-refs:fix",
+    "clean": "rimraf **/yarn.lock packages/**/dist packages/**/*.js packages/**/*.js.map node_modules",
+    "clean:refresh": "yarn clean && yarn && yarn ts-refs:fix",
     "ts-refs:fix": "utils-typescript-references",
     "lint:fix": "eslint . --ext .ts,.json"
   },

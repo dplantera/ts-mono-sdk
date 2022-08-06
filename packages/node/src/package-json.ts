@@ -29,10 +29,10 @@ function mergeScripts(jsonBin: PackageJsonType, jsonTarget: PackageJsonType) {
       switch (evaluatedPresenceOfScript) {
         case 'SCRIPT_NOT_PRESENT':
           console.log(` - [script-merge] added '${key}'`);
-          return { ...targetJsonScripts, key: scriptsSource[key] };
+          return { ...targetJsonScripts, [key]: scriptsSource[key] };
         case 'SCRIPT_NOT_IMPLEMENTED':
           console.log(` - [script-merge] overwritten '${key}' `);
-          return { ...targetJsonScripts, key: scriptsSource[key] };
+          return { ...targetJsonScripts, [key]: scriptsSource[key] };
         case 'IMPLEMENTED_SCRIPT_PRESENT':
           console.log(` - [script-merge] skipped, already implemented '${key}' `);
           return targetJsonScripts;

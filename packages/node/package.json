@@ -9,21 +9,11 @@
     "build:clean": "yarn clean && yarn build",
     "compile:pre": "echo '[script-not-implemented]: compile:pre'",
     "compile": "tsc",
-    "compile:post": "copy-files.ts",
+    "compile:post": "echo '[script-not-implemented]: compile:post'",
     "clean": "rimraf ./dist || echo Skipping 'clean' step due to error",
-    "start": "yarn build && node build/index.js",
-    "key": "echo '[script-not-implemented]: compile:pre'"
-  },
-  "bin": {
-    "cpm": "dist/src/index.js"
+    "start": "yarn build && node dist/index.js"
   },
   "keywords": [],
   "author": "dplantera",
-  "license": "ISC",
-  "dependencies": {
-    "commander": "^9.4.0"
-  },
-  "peerDependencies": {
-    "ts-node": "^10.9.1"
-  }
+  "license": "ISC"
 }
