@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<Tests xmlns="http://www.adatum.com">
+    <!-- This is a comment -->
+    <Test TestId="0001" TestType="CMD">
+        <Name>Attributes out of order</Name>
+        <Input>1</Input>
+        <Output>One</Output>
+    </Test>
+    <Test TestId="0002" TestType="CMD">
+        <Name>Children out of order</Name>
+        <Input>abc</Input>
+        <Output>def</Output>
+    </Test>
+    <Test TestId="0003" TestType="GUI">
+        <Name>Diff in attribute value</Name>
+        <Input>123</Input>
+        <Output>One Two Three</Output>
+    </Test>
+    <Test TestId="0004" TestType="GUI">
+        <Name>Containing ignored Element</Name>
+        <Input>a1</Input>
+        <Output>b1</Output>
+    </Test>
+    <Test TestId="0005" TestType="GUI">
+        <Name>Additional property</Name>
+        <Input>This is a test</Input>
+        <Output>14</Output>
+    </Test>
+    <Test TestId="0006" TestType="GUI">
+        <Name>Nested tests</Name>
+        <Input>
+            <Test TestId="0001" TestType="CMD">
+                <Name>Attributes out of order</Name>
+                <Input>1</Input>
+                <Output>One</Output>
+            </Test>
+            <Test TestId="0002" TestType="CMD">
+                <Name>Children out of order</Name>
+                <Input>abc</Input>
+                <Output>def</Output>
+            </Test>
+            <Test TestId="0003" TestType="GUI">
+                <Name>Diff in attribute value</Name>
+                <Input>123</Input>
+                <Output>One Two Three</Output>
+            </Test>
+        </Input>
+        <Output>10</Output>
+        <ElementWithAttrToIgnore TestId="0007" attrToIgnore="GUI">
+            <Name>Element with attribut to ignore</Name>
+            <Input>This is a test</Input>
+            <Output>14</Output>
+        </ElementWithAttrToIgnore>
+        <Test TestId="0003" TestType="GUI">
+            <Name>Nested Element with attribut to ignore</Name>
+            <Input>
+                <ElementWithAttrToIgnore a="a" attrToIgnore="b" c="c"> value </ElementWithAttrToIgnore>
+            </Input>
+            <Output>One Two Three</Output>
+        </Test>
+    </Test>
+</Tests>

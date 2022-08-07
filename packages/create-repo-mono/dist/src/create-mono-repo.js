@@ -60,7 +60,7 @@ function createFolderStructure(options) {
     return node_1.Filesystem.withPaths([options.destination, 'packages'])
         .andThen((files) => {
         console.log(JSON.stringify(files));
-        return node_1.Filesystem.writeFiles(...files);
+        return neverthrow_1.Result.combine(files.map((f) => node_1.Filesystem.dirs.ensureExists(f)));
     })
         .mapErr((err) => console.log(err));
 }

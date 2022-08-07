@@ -49,7 +49,7 @@ function createFolderStructure(options: Pick<CliOptions, 'destination' | 'repoNa
   return Filesystem.withPaths([options.destination, 'packages'])
     .andThen((files) => {
       console.log(JSON.stringify(files));
-      return Filesystem.writeFiles(...files);
+      return Result.combine(files.map((f) => Filesystem.dirs.ensureExists(f)));
     })
     .mapErr((err) => console.log(err));
 }

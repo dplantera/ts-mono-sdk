@@ -13,3 +13,4 @@ node_modules
 !jest.config.base.js
 *.log
 /.yarn/
+!jest.config.js

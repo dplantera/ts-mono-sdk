@@ -51,8 +51,11 @@ exports.Filesystem = {
     writeFiles,
 };
 function writeFiles(...files) {
-    return neverthrow_1.Result.combine(files.map((f) => ensureDirectoryExists(path.dirname(f))))
-        .map(() => files.map((file) => withTry(() => fs.writeFileSync(file, '', { encoding: 'utf-8' }))))
+    return neverthrow_1.Result.combine(files.map((f) => ensureDirectoryExists(path.dirname(f.name))))
+        .map(() => files.map((file) => withTry(() => {
+        fs.writeFileSync(file.name, file.payload, { encoding: 'utf-8' });
+        return file;
+    })))
         .andThen((res) => neverthrow_1.Result.combine(res));
 }
 function withPath(...pathSegments) {
@@ -61,7 +64,10 @@ function withPath(...pathSegments) {
 function withPaths(...paths) {
     return (0, neverthrow_1.ok)(paths.map((segments) => path.resolve(...segments)));
 }
-function readDir(dir, options = { withFileTypes: true, appendDirPath: true }) {
+function readDir(dir, options = {
+    withFileTypes: true,
+    appendDirPath: true,
+}) {
     return ensureDirectoryExists(dir).andThen((ensuredDir) => withTry(() => {
         const dirEntries = fs.readdirSync(ensuredDir, options);
         return options.appendDirPath

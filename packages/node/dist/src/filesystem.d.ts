@@ -27,7 +27,11 @@ export declare const Filesystem: {
 declare type ReadDirOptions = {
     appendDirPath: boolean;
 } & Parameters<typeof fs.readdirSync>[1];
-declare function writeFiles(...files: Array<string>): Result<void[], Error>;
+declare type TextFile = {
+    name: string;
+    payload: string;
+};
+declare function writeFiles(...files: Array<TextFile>): Result<TextFile[], Error>;
 declare type PathSegments = Parameters<typeof path.resolve>;
 declare function withPath(...pathSegments: PathSegments): Ok<string, never>;
 declare function withPaths(...paths: Array<PathSegments | string>): Ok<string[], never>;

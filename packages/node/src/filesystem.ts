@@ -29,9 +29,17 @@ export const Filesystem = {
 
 type ReadDirOptions = { appendDirPath: boolean } & Parameters<typeof fs.readdirSync>[1];
 
-function writeFiles(...files: Array<string>) {
-  return Result.combine(files.map((f) => ensureDirectoryExists(path.dirname(f))))
-    .map(() => files.map((file) => withTry(() => fs.writeFileSync(file, '', { encoding: 'utf-8' }))))
+type TextFile = { name: string; payload: string };
+function writeFiles(...files: Array<TextFile>) {
+  return Result.combine(files.map((f) => ensureDirectoryExists(path.dirname(f.name))))
+    .map(() =>
+      files.map((file) =>
+        withTry(() => {
+          fs.writeFileSync(file.name, file.payload, { encoding: 'utf-8' });
+          return file;
+        })
+      )
+    )
     .andThen((res) => Result.combine(res));
 }
 
@@ -45,7 +53,13 @@ function withPaths(...paths: Array<PathSegments | string>) {
   return ok(paths.map((segments) => path.resolve(...segments)));
 }
 
-function readDir(dir: string, options: ReadDirOptions = { withFileTypes: true, appendDirPath: true }): Result<fs.Dirent[], Error> {
+function readDir(
+  dir: string,
+  options: ReadDirOptions = {
+    withFileTypes: true,
+    appendDirPath: true,
+  }
+): Result<fs.Dirent[], Error> {
   return ensureDirectoryExists(dir).andThen((ensuredDir) =>
     withTry(() => {
       const dirEntries = fs.readdirSync(ensuredDir, options);
@@ -77,7 +91,9 @@ function copyDirectoryTo(_destination: string, ...sources: Array<string>) {
 function copyFilesFromDir(destination: string, filesToCopy: Array<{ directory: string; files: Array<string> }>) {
   const rsFilesToCopy = filesToCopy.reduce((acc, _toCopy) => {
     const filterFilesToCopy = (dieEntries: Array<fs.Dirent>) =>
-      dieEntries.filter((dirEntry: fs.Dirent) => _toCopy.files.some((fileNameToCopy) => dirEntry.name.includes(fileNameToCopy)));
+      dieEntries.filter((dirEntry: fs.Dirent) =>
+        _toCopy.files.some((fileNameToCopy) => dirEntry.name.includes(fileNameToCopy))
+      );
     const filesInSource = Filesystem.withCwd(_toCopy.directory).andThen(Filesystem.dirs.read).map(filterFilesToCopy);
     return [...acc, filesInSource];
   }, <Array<Result<fs.Dirent[], Error>>>[]);
@@ -100,7 +116,9 @@ function copyFiles(_destination: string, ...filesToCopy: Array<string>) {
     filesToCopy.forEach((f) => {
       const targetFile = path.resolve(destination, path.basename(f));
       console.log(`copying file: ${f} => ${targetFile}`);
-      withTry(() => fs.copyFileSync(f, targetFile)).mapErr((err) => console.error(`copy failed for: ${f}: ${err.message}`));
+      withTry(() => fs.copyFileSync(f, targetFile)).mapErr((err) =>
+        console.error(`copy failed for: ${f}: ${err.message}`)
+      );
     });
     return destination;
   });
