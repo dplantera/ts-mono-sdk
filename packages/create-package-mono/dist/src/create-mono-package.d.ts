@@ -1,2 +1,8 @@
-import { CliOptions } from './index';
-export declare function createMonoPackage(options: CliOptions): void;
+import { Command } from 'commander';
+export declare type CliOptions = {
+    packageName: string;
+    verbose: boolean;
+    packageRoot: string;
+    repoName: string | undefined;
+};
+export declare const program: Command;

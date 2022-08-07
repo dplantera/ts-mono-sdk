@@ -14,20 +14,19 @@
     "start": "yarn build && node dist/src/index.js"
   },
   "bin": {
-    "cpm": "dist/src/index.js"
+    "cpm": "dist/src/cli.index.js"
   },
   "keywords": [],
   "author": "dplantera",
   "license": "ISC",
   "dependencies": {
-    "commander": "^9.4.0",
-    "neverthrow": "^5.0.0"
+    "commander": "^9.4.0"
   },
   "devDependencies": {
     "@ts-mono-sdk/node": "*"
   },
   "peerDependencies": {
-    "@ts-mono-sdk/node": "*",
-    "ts-node": "^10.9.1"
+    "@ts-mono-sdk/node": "0.x",
+    "ts-node": "10.x"
   }
 }

@@ -3,5 +3,16 @@
   "compilerOptions": {
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "copy-files.ts",
+    "src/**/*.ts"
+  ],
+  "references": [
+    {
+      "path": "../create-package-mono"
+    },
+    {
+      "path": "../node"
+    }
+  ]
 }

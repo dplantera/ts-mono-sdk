@@ -1,11 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { err, ok, Result } from 'neverthrow';
+import { err, Ok, ok, Result } from 'neverthrow';
 import * as process from 'process';
+import * as _ from 'lodash';
 
 const Copy = {
   files: copyFiles,
   directory: copyDirectoryTo,
+  filesFromDir: copyFilesFromDir,
 };
 
 /** *
@@ -13,10 +15,47 @@ const Copy = {
  */
 export const Filesystem = {
   withFile,
+  withPath,
+  withPaths,
   withDir,
-  dirs: { ensureExists: ensureDirectoryExists },
+  withCwd,
+  dirs: { ensureExists: ensureDirectoryExists, read: readDir },
   copy: Copy,
+  writeFiles,
 };
+
+type ReadDirOptions = { appendDirPath: boolean } & Parameters<typeof fs.readdirSync>[1];
+
+function writeFiles(...files: Array<string>) {
+  return Result.combine(files.map((f) => ensureDirectoryExists(path.dirname(f))))
+    .map(() => files.map((file) => withTry(() => fs.writeFileSync(file, '', { encoding: 'utf-8' }))))
+    .andThen((res) => Result.combine(res));
+}
+
+type PathSegments = Parameters<typeof path.resolve>;
+
+function withPath(...pathSegments: PathSegments) {
+  return ok(path.resolve(...pathSegments));
+}
+
+function withPaths(...paths: Array<PathSegments | string>) {
+  return ok(paths.map((segments) => path.resolve(...segments)));
+}
+
+function readDir(dir: string, options: ReadDirOptions = { withFileTypes: true, appendDirPath: true }): Result<fs.Dirent[], Error> {
+  return ensureDirectoryExists(dir).andThen((ensuredDir) =>
+    withTry(() => {
+      const dirEntries = fs.readdirSync(ensuredDir, options);
+      return options.appendDirPath
+        ? dirEntries.map((dirEntry) =>
+            _.merge(dirEntry, {
+              name: path.resolve(ensuredDir, dirEntry.name),
+            })
+          )
+        : dirEntries;
+    })
+  );
+}
 
 function copyDirectoryTo(_destination: string, ...sources: Array<string>) {
   return ensureDirectoryExists(_destination).map((destination) => {
@@ -30,6 +69,27 @@ function copyDirectoryTo(_destination: string, ...sources: Array<string>) {
     });
     return destination;
   });
+}
+
+function copyFilesFromDir(destination: string, filesToCopy: Array<{ directory: string; files: Array<string> }>) {
+  const rsFilesToCopy = filesToCopy.reduce((acc, _toCopy) => {
+    const filterFilesToCopy = (dieEntries: Array<fs.Dirent>) =>
+      dieEntries.filter((dirEntry: fs.Dirent) => _toCopy.files.some((fileNameToCopy) => dirEntry.name.includes(fileNameToCopy)));
+    const filesInSource = Filesystem.withCwd(_toCopy.directory).andThen(Filesystem.dirs.read).map(filterFilesToCopy);
+    return [...acc, filesInSource];
+  }, <Array<Result<fs.Dirent[], Error>>>[]);
+
+  Result.combineWithAllErrors(rsFilesToCopy)
+    .map(_.flatten)
+    .andThen((dirEntries) =>
+      Filesystem.withCwd(destination).map((copyTargetPath) => {
+        const filesToCopy = dirEntries.filter((f) => f.isFile()).map((f) => f.name);
+        Filesystem.copy.files(copyTargetPath, ...filesToCopy);
+        return filesToCopy;
+      })
+    )
+    .mapErr((errs) => errs.forEach((err) => console.error(err)))
+    .unwrapOr([]);
 }
 
 function copyFiles(_destination: string, ...filesToCopy: Array<string>) {
@@ -72,4 +132,9 @@ function withDir(_directory: string, { isDirectory } = { isDirectory: true }): R
   } catch (error: unknown) {
     return err(error as Error);
   }
+}
+
+function withCwd(...pathSegments: Array<string>): Ok<string, never> {
+  console.log(`current working directory: ${process.cwd()}`);
+  return ok(path.resolve(process.cwd(), ...pathSegments));
 }

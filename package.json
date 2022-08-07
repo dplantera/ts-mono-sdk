@@ -41,7 +41,8 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "neverthrow": "^5.0.0"
   },
   "packageManager": "yarn@3.2.2"
 }

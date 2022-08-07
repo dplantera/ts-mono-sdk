@@ -406,18 +406,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dsp/create-package-mono@workspace:packages/create-package-mono":
+"@dsp/create-package-mono@*, @dsp/create-package-mono@workspace:packages/create-package-mono":
   version: 0.0.0-use.local
   resolution: "@dsp/create-package-mono@workspace:packages/create-package-mono"
   dependencies:
     "@ts-mono-sdk/node": "*"
     commander: ^9.4.0
-    neverthrow: ^5.0.0
   peerDependencies:
-    "@ts-mono-sdk/node": "*"
-    ts-node: ^10.9.1
+    "@ts-mono-sdk/node": 0.x
+    ts-node: 10.x
   bin:
-    cpm: dist/src/index.js
+    cpm: dist/src/cli.index.js
   languageName: unknown
   linkType: soft
 
@@ -873,6 +872,22 @@ __metadata:
   checksum: ad87447820dd3f24825d2d947ebc03072b20a42bfc96cbafec16bff8bbda6c1a81fcb0be56d5b21968560c5359a0af4038a68ba150c3e1694fe4c109a063bed8
   languageName: node
   linkType: hard
+
+"@ts-mono-sdk/create-repo-mono@workspace:packages/create-repo-mono":
+  version: 0.0.0-use.local
+  resolution: "@ts-mono-sdk/create-repo-mono@workspace:packages/create-repo-mono"
+  dependencies:
+    "@dsp/create-package-mono": "*"
+    "@ts-mono-sdk/node": "*"
+    commander: ^9.4.0
+  peerDependencies:
+    "@dsp/create-package-mono": 0.x
+    "@ts-mono-sdk/node": 0.x
+    ts-node: 10.x
+  bin:
+    dsp-mono: dist/src/index.js
+  languageName: unknown
+  linkType: soft
 
 "@ts-mono-sdk/node@*, @ts-mono-sdk/node@workspace:packages/node":
   version: 0.0.0-use.local
@@ -4590,6 +4605,7 @@ __metadata:
     eslint-plugin-json: ^3.1.0
     jest: ^28.1.0
     lodash: ^4.17.21
+    neverthrow: ^5.0.0
     nodemon: ^2.0.15
     prettier: ^2.6.2
     rimraf: ^3.0.2

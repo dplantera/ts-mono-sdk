@@ -10,12 +10,25 @@
     "build:clean": "yarn clean && yarn build",
     "compile:pre": "echo '[script-not-implemented]: compile:pre'",
     "compile": "tsc",
-    "compile:post": "echo '[script-not-implemented]: compile:post'",
+    "compile:post": "copy-files.ts",
     "clean": "rimraf ./dist || echo Skipping 'clean' step due to error"
+  },
+  "bin": {
+    "dsp-mono": "dist/src/index.js"
   },
   "keywords": [],
   "author": "dplantera",
   "license": "MIT",
-  "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "commander": "^9.4.0"
+  },
+  "devDependencies": {
+    "@dsp/create-package-mono": "*",
+    "@ts-mono-sdk/node": "*"
+  },
+  "peerDependencies": {
+    "@dsp/create-package-mono": "0.x",
+    "@ts-mono-sdk/node": "0.x",
+    "ts-node": "10.x"
+  }
 }
