@@ -1,0 +1,21 @@
+{
+  "name": "@ts-mono-sdk/create-repo-mono",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./dist/src/index.js",
+  "scripts": {
+    "start": "yarn build && node dist/index.js",
+    "start:dev": "nodemon",
+    "build": "yarn compile:pre && yarn compile && yarn compile:post",
+    "build:clean": "yarn clean && yarn build",
+    "compile:pre": "echo '[script-not-implemented]: compile:pre'",
+    "compile": "tsc",
+    "compile:post": "echo '[script-not-implemented]: compile:post'",
+    "clean": "rimraf ./dist || echo Skipping 'clean' step due to error"
+  },
+  "keywords": [],
+  "author": "dplantera",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
