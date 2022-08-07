@@ -1,0 +1,47 @@
+{
+  "name": "ts-mono-sdk",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": "https://github.com/dplantera/openapi.git",
+  "scripts": {
+    "test": "echo '[script-not-implemented]: test'",
+    "build": "yarn build:ws && yarn ts-refs:fix",
+    "build:ws": "yarn workspaces foreach -pt --no-private run build",
+    "clean": "rimraf **/yarn.lock packages/**/dist packages/**/*.js packages/**/*.js.map node_modules",
+    "clean:refresh": "yarn clean && yarn && yarn ts-refs:fix",
+    "ts-refs:fix": "utils-typescript-references",
+    "lint:fix": "eslint . --ext .ts,.json"
+  },
+  "keywords": [],
+  "author": "dsp",
+  "license": "ISC",
+  "devDependencies": {
+    "@goldstack/utils-typescript-references": "^0.2.3",
+    "@jest/types": "^28.1.0",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^17.0.31",
+    "@types/yargs": "^17.0.10",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.21.0",
+    "eslint-plugin-json": "^3.1.0",
+    "jest": "^28.1.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.6.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.3",
+    "ts-node": "^10.7.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "neverthrow": "^5.0.0"
+  },
+  "packageManager": "yarn@3.2.2"
+}

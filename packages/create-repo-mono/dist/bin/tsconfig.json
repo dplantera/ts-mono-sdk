@@ -1,0 +1,18 @@
+{
+  "extends": "tsconfig.base.json",
+  "exclude": [
+    "packages/**/tests/**",
+    "packages/**/dist/**"
+  ],
+  "references": [
+    {
+      "path": "packages/create-package-mono"
+    },
+    {
+      "path": "packages/create-repo-mono"
+    },
+    {
+      "path": "packages/node"
+    }
+  ]
+}
