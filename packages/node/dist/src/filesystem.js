@@ -29,6 +29,7 @@ const path = __importStar(require("path"));
 const neverthrow_1 = require("neverthrow");
 const process = __importStar(require("process"));
 const _ = __importStar(require("lodash"));
+const console = __importStar(require("console"));
 const Copy = {
     files: copyFiles,
     directory: copyDirectoryTo,
@@ -39,9 +40,11 @@ const Copy = {
  */
 exports.Filesystem = {
     withFile,
+    withFiles,
     withPath,
     withPaths,
     withDir,
+    withCurrentDir: () => __dirname,
     withCwd,
     dirs: { ensureExists: ensureDirectoryExists, read: readDir },
     copy: Copy,
@@ -117,13 +120,18 @@ function withTry(fun) {
     return neverthrow_1.Result.fromThrowable(fun)().mapErr((err) => err);
 }
 function withFile(file) {
-    try {
-        return fs.existsSync(file) ? (0, neverthrow_1.ok)(fs.readFileSync(file, { encoding: 'utf-8' })) : (0, neverthrow_1.err)('FILE_NOT_EXISTS');
-    }
-    catch (error) {
-        console.log(error);
-        return (0, neverthrow_1.err)(`FILE_ACCESS_ERROR:${file}`);
-    }
+    return withFiles(file)
+        .map((files) => files === null || files === void 0 ? void 0 : files[0])
+        .mapErr((errs) => {
+        const err = errs === null || errs === void 0 ? void 0 : errs[0];
+        if (err.message.includes('no such file')) {
+            return 'FILE_NOT_EXISTS';
+        }
+        return `FILE_ACCESS_ERROR:${err.message}`;
+    });
+}
+function withFiles(...files) {
+    return neverthrow_1.Result.combineWithAllErrors(files.map((file) => withTry(() => fs.readFileSync(file, { encoding: 'utf-8' }))));
 }
 function withDir(_directory, { isDirectory } = { isDirectory: true }) {
     const directory = isDirectory ? _directory : path.dirname(_directory);

@@ -7,9 +7,11 @@ import { Ok, Result } from 'neverthrow';
  */
 export declare const Filesystem: {
     withFile: typeof withFile;
+    withFiles: typeof withFiles;
     withPath: typeof withPath;
     withPaths: typeof withPaths;
     withDir: typeof withDir;
+    withCurrentDir: () => string;
     withCwd: typeof withCwd;
     dirs: {
         ensureExists: typeof ensureDirectoryExists;
@@ -40,6 +42,7 @@ declare function ensureDirectoryExists(destination: string, { isDirectory }?: {
     isDirectory: boolean;
 }): Result<string, Error>;
 declare function withFile(file: string): Result<string, 'FILE_NOT_EXISTS' | `FILE_ACCESS_ERROR:${string}`>;
+declare function withFiles(...files: Array<string>): Result<string[], Error[]>;
 declare function withDir(_directory: string, { isDirectory }?: {
     isDirectory: boolean;
 }): Result<string, string | Error>;

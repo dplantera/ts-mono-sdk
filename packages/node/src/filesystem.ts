@@ -3,6 +3,7 @@ import * as path from 'path';
 import { err, Ok, ok, Result } from 'neverthrow';
 import * as process from 'process';
 import * as _ from 'lodash';
+import * as console from 'console';
 
 const Copy = {
   files: copyFiles,
@@ -15,9 +16,11 @@ const Copy = {
  */
 export const Filesystem = {
   withFile,
+  withFiles,
   withPath,
   withPaths,
   withDir,
+  withCurrentDir: () => __dirname,
   withCwd,
   dirs: { ensureExists: ensureDirectoryExists, read: readDir },
   copy: Copy,
@@ -117,12 +120,19 @@ function withTry<T, E extends Error>(fun: () => T): Result<T, E> {
 }
 
 function withFile(file: string): Result<string, 'FILE_NOT_EXISTS' | `FILE_ACCESS_ERROR:${string}`> {
-  try {
-    return fs.existsSync(file) ? ok(fs.readFileSync(file, { encoding: 'utf-8' })) : err('FILE_NOT_EXISTS');
-  } catch (error: unknown) {
-    console.log(error);
-    return err(`FILE_ACCESS_ERROR:${file}` as const);
-  }
+  return withFiles(file)
+    .map((files) => files?.[0])
+    .mapErr((errs) => {
+      const err = errs?.[0];
+      if (err.message.includes('no such file')) {
+        return 'FILE_NOT_EXISTS';
+      }
+      return `FILE_ACCESS_ERROR:${err.message}` as const;
+    });
+}
+
+function withFiles(...files: Array<string>) {
+  return Result.combineWithAllErrors(files.map((file) => withTry(() => fs.readFileSync(file, { encoding: 'utf-8' }))));
 }
 
 function withDir(_directory: string, { isDirectory } = { isDirectory: true }): Result<string, string | Error> {
